@@ -28,25 +28,11 @@ const manifest = {
   icons: {
     128: "icon-128.png",
   },
-  content_scripts: [
-    {
-      matches: ["http://*/*", "https://*/*", "<all_urls>"],
-      js: ["src/pages/content/index.js"],
-      // KEY for cache invalidation
-      css: [
-        // "assets/css/contentStyle<KEY>.chunk.css"
-      ],
-    },
-  ],
+  content_scripts: [],
   devtools_page: "src/pages/devtools/index.html",
   web_accessible_resources: [
     {
-      resources: [
-        "assets/js/*.js",
-        "assets/css/*.css",
-        "icon-128.png",
-        "icon-128.png",
-      ],
+      resources: ["assets/js/*.js", "assets/css/*.css", "icon-128.png"],
       matches: ["*://*/*"],
     },
   ],

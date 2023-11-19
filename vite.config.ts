@@ -29,9 +29,7 @@ export default defineConfig({
     },
   },
   plugins: [
-    makeManifest({
-      contentScriptCssKey: regenerateCacheInvalidationKey(),
-    }),
+    makeManifest({}),
     react(),
     customDynamicImport(),
     addHmr({ background: enableHmrInBackgroundScript, view: true }),
@@ -50,9 +48,7 @@ export default defineConfig({
       input: {
         devtools: resolve(pagesDir, "devtools", "index.html"),
         panel: resolve(pagesDir, "panel", "index.html"),
-        content: resolve(pagesDir, "content", "index.ts"),
         background: resolve(pagesDir, "background", "index.ts"),
-        //contentStyle: resolve(pagesDir, "content", "style.scss"),
         popup: resolve(pagesDir, "popup", "index.html"),
         newtab: resolve(pagesDir, "newtab", "index.html"),
         options: resolve(pagesDir, "options", "index.html"),
@@ -67,9 +63,6 @@ export default defineConfig({
           const { dir, name: _name } = path.parse(assetInfo.name);
           const assetFolder = dir.split("/").at(-1);
           const name = assetFolder + firstUpperCase(_name);
-          if (name === "contentStyle") {
-            return `assets/css/contentStyle${cacheInvalidationKey}.chunk.css`;
-          }
           return `assets/[ext]/${name}.chunk.[ext]`;
         },
       },
@@ -80,14 +73,4 @@ export default defineConfig({
 function firstUpperCase(str: string) {
   const firstAlphabet = new RegExp(/( |^)[a-z]/, "g");
   return str.toLowerCase().replace(firstAlphabet, (L) => L.toUpperCase());
-}
-
-let cacheInvalidationKey: string = generateKey();
-function regenerateCacheInvalidationKey() {
-  cacheInvalidationKey = generateKey();
-  return cacheInvalidationKey;
-}
-
-function generateKey(): string {
-  return `${(Date.now() / 100).toFixed()}`;
 }

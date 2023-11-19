@@ -1,11 +1,11 @@
 {
-  "name": "chrome-extension-boilerplate-react-vite",
-  "version": "0.0.1",
-  "description": "chrome extension boilerplate",
+  "name": "MyLinks",
+  "version": "1.0.0",
+  "description": "MyLinks is a free and open source software, that lets you manage your favorite links in an intuitive interface",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Jonghakseo/chrome-extension-boilerplate-react-vite.git"
+    "url": "https://github.com/Sonny93/my-links-new-extension.git"
   },
   "scripts": {
     "build": "tsc --noEmit && vite build",
@@ -75,6 +75,5 @@
       "prettier --write",
       "eslint --fix"
     ]
-  },
-  "packageManager": "pnpm@8.9.2"
+  }
 }
