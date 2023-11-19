@@ -1,6 +1,4 @@
-.App {
+iframe {
   height: 100%;
-  color: #fff;
-  background-color: #282c34;
-  padding: 10px;
+  width: 100%;
 }

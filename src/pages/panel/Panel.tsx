@@ -1,11 +1,16 @@
 import React from "react";
 import "@pages/panel/Panel.css";
+import useStorage from "@src/shared/hooks/useStorage";
+import remoteUrlStorage from "@src/shared/storages/remoteUrlStorage";
 
 const Panel: React.FC = () => {
+  const remoteUrl = useStorage(remoteUrlStorage);
   return (
-    <div className="container">
-      <h1 className="">Dev Tools Panel</h1>
-    </div>
+    <iframe
+      src={remoteUrl}
+      title="MyLins app"
+      style={{ height: "100%", width: "100%" }}
+    />
   );
 };
 

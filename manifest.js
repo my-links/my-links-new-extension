@@ -9,7 +9,7 @@ const manifest = {
   name: packageJson.name,
   version: packageJson.version,
   description: packageJson.description,
-  permissions: ["storage", "sidePanel"],
+  permissions: ["storage", "sidePanel", "contextMenus", "notifications"],
   side_panel: {
     default_path: "src/pages/sidepanel/index.html",
   },
@@ -33,7 +33,9 @@ const manifest = {
       matches: ["http://*/*", "https://*/*", "<all_urls>"],
       js: ["src/pages/content/index.js"],
       // KEY for cache invalidation
-      css: ["assets/css/contentStyle<KEY>.chunk.css"],
+      css: [
+        // "assets/css/contentStyle<KEY>.chunk.css"
+      ],
     },
   ],
   devtools_page: "src/pages/devtools/index.html",

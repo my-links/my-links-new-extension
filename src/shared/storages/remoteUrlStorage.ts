@@ -1,10 +1,13 @@
-import {BaseStorage, createStorage, StorageType,} from "@src/shared/storages/base";
+import {
+  BaseStorage,
+  createStorage,
+  StorageType,
+} from "@src/shared/storages/base";
+import { FALLBACK_URL } from "@src/contants";
 
 type RemoteUrlStorage = BaseStorage<string> & {
   set: (remoteUrl: string) => void;
 };
-
-const FALLBACK_URL = 'https://www.mylinks.app/'
 
 const storage = createStorage<string>("remote-url-key", FALLBACK_URL, {
   storageType: StorageType.Local,
@@ -12,7 +15,8 @@ const storage = createStorage<string>("remote-url-key", FALLBACK_URL, {
 
 const remoteUrlStorage: RemoteUrlStorage = {
   ...storage,
-  set: (remoteUrl: string) => storage.set(remoteUrl)
+  set: (remoteUrl: string) =>
+    storage.set(remoteUrl.endsWith("/") ? remoteUrl : remoteUrl + "/"),
 };
 
 export default remoteUrlStorage;

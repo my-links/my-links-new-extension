@@ -1,5 +1,6 @@
 import reloadOnUpdate from "virtual:reload-on-update-in-background-script";
 import "webextension-polyfill";
+import { makeRequest } from "@src/lib/makeRequest";
 import remoteUrlStorage from "@src/shared/storages/remoteUrlStorage";
 
 reloadOnUpdate("pages/background");
@@ -12,30 +13,29 @@ reloadOnUpdate("pages/content/style.scss");
 
 console.log("background loaded");
 
-const CTX_MENU_ID = '__ctx-menu-my-links-id';
+const CTX_MENU_ID = "__ctx-menu-my-links-id";
 
-chrome.runtime.onInstalled.addListener(async (details) => {
-  console.log(details);
-  chrome.tabs.query({active: true, lastFocusedWindow: true}, async (tabs) => {
+chrome.runtime.onInstalled.addListener(async () => {
+  chrome.tabs.query({ active: true, lastFocusedWindow: true }, async (tabs) => {
     const url = tabs[0].url;
     console.log(url);
 
     chrome.contextMenus.create({
-      title: 'Ajouter cette page à une catégorie',
-      contexts: ['all'],
+      title: "Ajouter cette page à une catégorie",
+      contexts: ["all"],
       id: CTX_MENU_ID,
     });
 
-    const remoteUrl = await remoteUrlStorage.get();
-    const {categories} = await fetch(`${remoteUrl}/api/category`).then((req) =>
-      req.json()
-    );
+    const { categories } = await makeRequest<{ categories: Category[] }>({
+      path: "api/category",
+    });
     console.log(categories);
+    chrome.action.setBadgeText({ text: categories.length.toString() });
 
-    categories.forEach((category: any) => {
+    categories.forEach((category: Category) => {
       chrome.contextMenus.create({
         title: category.name,
-        contexts: ['all'],
+        contexts: ["all"],
         id: category.id.toString(),
         parentId: CTX_MENU_ID,
       });
@@ -44,51 +44,44 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 });
 chrome.runtime.onUpdateAvailable.addListener(() => chrome.runtime.reload());
 
-chrome.contextMenus.onClicked.addListener(addToCategory);
+chrome.contextMenus?.onClicked.addListener(addToCategory);
 
 async function addToCategory(
   info: chrome.contextMenus.OnClickData,
-  tab?: chrome.tabs.Tab | undefined
+  tab?: chrome.tabs.Tab | undefined,
 ) {
-  const request = await fetch(BASE_URL + '/api/link/create', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      name: tab?.title,
-      url: tab?.url,
-      favorite: false,
-      categoryId: info.menuItemId,
-    }),
-  });
-
-  if (!request.ok) {
-    showNotification({
-      title: 'Erreur',
-      message:
-        "Une erreur est survenue lors de l'ajout du lien dans la catégorie",
+  try {
+    await makeRequest({
+      path: "api/link",
+      method: "POST",
+      body: {
+        name: tab?.title || tab?.url,
+        url: tab?.url,
+        favorite: false,
+        categoryId: info.menuItemId,
+      },
     });
-    return console.error(
-      "Une erreur est survenue lors de l'ajout du lien dans la catégorie"
-    );
+    showNotification({ title: "Succès", message: "Lien ajouté" });
+  } catch (error) {
+    showNotification({
+      title: "Erreur",
+      message: error,
+    });
+    console.error(error);
   }
-
-  const data = await request.json();
-  console.log(data);
-  showNotification({title: 'Succèss', message: 'Lien ajouté'});
 }
 
-function showNotification({
-                            title,
-                            message,
-                          }: {
+async function showNotification({
+  title,
+  message,
+}: {
   title: string;
   message: string;
 }) {
+  const remoteUrl = await remoteUrlStorage.get();
   chrome.notifications.create({
-    type: 'basic',
-    iconUrl: BASE_URL + '/favicon.ico',
+    type: "basic",
+    iconUrl: `${remoteUrl}favicon.png`,
     title,
     message,
   });
