@@ -1,1 +1,1 @@
-export const FALLBACK_URL = "https://www.mylinks.app/";
+export const FALLBACK_URL = "https://www.mylinks.app/app";
