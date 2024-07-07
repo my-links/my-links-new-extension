@@ -1,8 +1,8 @@
 {
   "hooks": {
     "before:init": [
-      "npm format",
-      "npm lint"
+      "npm run format",
+      "npm run lint"
     ]
   },
   "git": {
