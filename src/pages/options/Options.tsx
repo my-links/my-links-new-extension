@@ -1,8 +1,8 @@
-import React, { FormEvent, useState } from "react";
-import "@pages/options/Options.css";
+import { Button, Form, Textbox, ThemeContextProvider } from "@minimalstuff/ui";
+import { FALLBACK_URL } from "@root/src/constants";
 import useStorage from "@src/shared/hooks/useStorage";
 import remoteUrlStorage from "@src/shared/storages/remoteUrlStorage";
-import { FALLBACK_URL } from "@src/contants";
+import React, { FormEvent, useState } from "react";
 
 const Options: React.FC = () => {
   const remoteUrl = useStorage(remoteUrlStorage);
@@ -19,27 +19,25 @@ const Options: React.FC = () => {
   }
 
   return (
-    <div className="container">
+    <ThemeContextProvider>
       <h1>Options</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="field">
-          <label htmlFor="remote-url">Remote server URL</label>
-          <input
-            type="text"
-            name="remote-url"
-            id="remote-url"
-            onChange={(event) => setNewRemoteUrl(event.target.value)}
-            value={newRemoteUrl}
-          />
+      <Form onSubmit={handleSubmit} onReset={resetRemoteUrl}>
+        <Textbox
+          label="Remote server URL"
+          name="remote-url"
+          onChange={(_, value) => setNewRemoteUrl(value)}
+          value={newRemoteUrl}
+        />
+        <div style={{ display: "flex", alignItems: "center", gap: ".35em" }}>
+          <Button type="reset" onClick={resetRemoteUrl} secondary>
+            reset url
+          </Button>
+          <Button type="submit">update</Button>
         </div>
-        <button type="submit">update</button>
-        <button type="button" onClick={resetRemoteUrl}>
-          reset url
-        </button>
         <p>current url: {remoteUrl}</p>
         <p>default url: {FALLBACK_URL}</p>
-      </form>
-    </div>
+      </Form>
+    </ThemeContextProvider>
   );
 };
 

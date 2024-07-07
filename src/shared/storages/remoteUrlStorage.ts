@@ -3,7 +3,7 @@ import {
   createStorage,
   StorageType,
 } from "@src/shared/storages/base";
-import { FALLBACK_URL } from "@src/contants";
+import { FALLBACK_URL } from "@root/src/constants";
 
 type RemoteUrlStorage = BaseStorage<string> & {
   set: (remoteUrl: string) => void;

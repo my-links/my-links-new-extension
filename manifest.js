@@ -29,7 +29,6 @@ const manifest = {
     128: "icon-128.png",
   },
   content_scripts: [],
-  devtools_page: "src/pages/devtools/index.html",
   web_accessible_resources: [
     {
       resources: ["assets/js/*.js", "assets/css/*.css", "icon-128.png"],
